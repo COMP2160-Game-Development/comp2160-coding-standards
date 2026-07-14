@@ -23,12 +23,12 @@ As a general principle, avoid requiring any by-hand configuration in the Inspect
 
 An exception to this is connecting related objects within the same prefab. E.g. a UIMananger prefab may include links to various UI elements that are children within the prefab. These can be connected by hand when the prefab is constructed. They should be tagged with the `[Required]` and `[ChildGameObjectsOnly]` attributes.
 
+## Awake
+
 An object should be initialised in `Awake()` including:
 * Getting and storing relevant components, using `GetComponent`. An appropriate `[RequireComponent]` tag should be included for each.
 * Getting and storing references to other objects in the scene (e.g. managers) using `FindAnyObjectByType`.
-* Setting expected paramters on components (e.g. disabling gravity on a rigidbody)
-* Subscribing to events on other objects.
-* Setting up input actions
+* Setting expected parameters on components (e.g. disabling gravity on a rigidbody)
 
 **EXAMPLE**
 ```
@@ -59,11 +59,101 @@ public class PlayerMove : MonoBehaviour
         rigidbody.gravityScale = 0; // disable gravity
 
         gameManager = FindAnyObjectByType<GameManager>();
-        gameMananger.OnGameStarted += OnGameStarted;
     }
 #endregion
 }
 ```
+
+**AVOID**
+
+Things that should **not** be in `Awake()`:
+* Method calls to other objects that may not have initialised yet (handle in Start)
+* Event subscriptions (handle in OnEnable)
+* Triggering events (handle in Start)
+
+## OnEnable / OnDisable
+
+Event handlers should subscribe in `OnEnable()` and unsubsribe in `OnDisable()`. This pattern is used to avoid having a disabled or destroyed object still processing events.
+
+**EXAMPLE**
+```
+public class PlayerMove : MonoBehaviour
+{
+#region Connected Objects
+    private GameManager gameManager;
+#endregion
+
+#region State
+    private Actions actions;
+#endregion
+
+#region Init & Destroy
+    void Awake()
+    {
+        actions = new Actions();
+        gameManager = FindAnyObjectByType<GameManager>();
+    }
+
+    void OnEnable() 
+    {
+        // subscribe to events
+        gameMananger.OnGameStarted += OnGameStarted;
+
+        actions.PlayerMove.Enable();
+        actions.PlayerMove.turbo += OnTurboBoost;
+    }
+
+    void OnDisable() 
+    {
+        // unsubscribe from events
+        gameMananger.OnGameStarted -= OnGameStarted;
+
+        actions.PlayerMove.Disable();
+        actions.PlayerMove.turbo -= OnTurboBoost;
+    }
+#endregion
+}
+```
+
+## Start
+
+The `Start()` method can be used for initialisation that involves communication with other MonoBehaviour components, including:
+* Method calls to other objects
+* Triggering events listened to by other objects
+
+This is done to avoid calling a method on an object that has not been initialised yet.
+
+**EXAMPLE**
+```
+public class GameManager : MonoBehaviour
+{
+#region Connected Objects
+    private UIManager uiManager;
+#endregion
+
+#region Events
+    public delegate void GameStartedHandler();
+    public event GameStartedHandler OnGameStarted;
+#endregion
+
+#region Init & Destroy
+    void Awake()
+    {
+        // initialise self
+        uiManager = FindAnyObjectByType<UIManager>();
+    }
+
+    void Start() 
+    {
+        // calls to other objects go here
+        uiManager.ShowTitle();
+        // events should trigger here
+        OnGameStarted?.Invoke();
+    }
+#endregion
+}
+```
+
 
 # State & Properties
 
@@ -72,27 +162,37 @@ All state variables should be private. Properties can be used to provide public 
 PREFER:
 ```
 private float size;
-public float Size => size;
+public float Size => size;  // read-only
+```
+
+PREFER:
+```
+private float size;
+public float Size   // read and write
+{
+    get { return size; }
+    set { size = value; }
+}
 ```
 
 AVOID:
 ```
-public float size;
+public float size;  // read-and-write
 ```
 
 AVOID:
 ```
 private float size;
-public float Size { get { return size; } }
+public float Size { get { return size; } }  // read-only
 ```
 
 # Actions
 
 All input should be done using the Input System, not the obsolete Input Manager.
 
-The **Generate C# Class** option should be set on the Input Action asset. The generated C# class should be used to access specific InputActions. A new Actions object should be created in the `Awake` method of a class that handles input. 
+The **Generate C# Class** option should be set on the Input Action asset. The generated C# class should be used to access specific InputActions. A new Actions object should be created in the `Awake()` method of a class that handles input. 
 
-Input Action maps should be named according to the Monobehaviour that uses them, and should be activated in `OnEnable` and `OnDisable`. Avoid using the same mapping in different Monobehaviours as this may cause enabling/disabling to get out of sync.
+Input Action maps should be named according to the MonoBehaviour that uses them, and should be activated in `OnEnable` and `OnDisable`. Avoid using the same mapping in different MonoBehaviours as this may cause enabling/disabling to get out of sync.
 
 Use input events or polling as appropriate.
 
@@ -108,17 +208,18 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         actions = new Actions();
-        actions.Player.Jump.performed += (ctx) => { wasJumpPressed = true; };
     }
 
     void OnEnable() 
     {
         actions.PlayerMove.Enable();
+        actions.PlayerMove.Jump.performed += OnJump;
     }
 
     void OnDisable() 
     {
         actions.PlayerMove.Disable();
+        actions.PlayerMove.Jump.performed -= OnJump;
     }
 #endregion
 
@@ -127,6 +228,13 @@ public class PlayerMove : MonoBehaviour
     {
         Vector2 move = Actions.Player.Move.ReadValue<Vector2>();
         // ...    
+    }
+#endregion
+
+#region Event handlers
+    privte void OnJump()
+    {
+        // handle jump
     }
 #endregion
 }
@@ -190,8 +298,6 @@ public class UIManager : MonoBehaviour
 }
 ```
 
-## Types
-
 ## Unit
 
 Use the `[Unit]` tag to indicate the units for a parameter, e.g. metres, seconds, degress etc.
@@ -206,3 +312,7 @@ Use the `[Unit]` tag to indicate the units for a parameter, e.g. metres, seconds
 # 2026.1
 
 * First draft by Malcolm Ryan
+
+# 2026.2
+
+* Updated for COMP2160
