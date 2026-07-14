@@ -1,0 +1,43 @@
+/**
+ *
+ * Author: Malcolm Ryan
+ * Version: 1.0
+ * For Unity Version: 6.3
+ */
+
+using UnityEngine;
+using Sirenix.OdinInspector;
+
+    #ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : MonoBehaviour
+{
+
+#region Parameters
+#endregion 
+
+#region Components
+#endregion
+
+#region State
+#endregion
+
+#region Properties
+#endregion
+
+#region Events
+#endregion
+
+#region Init & Destroy
+    void Awake()
+    {
+    }
+#endregion 
+
+#region Update
+    void Update()
+    {
+    }
+#endregion 
+
+}
+#ROOTNAMESPACEEND#
