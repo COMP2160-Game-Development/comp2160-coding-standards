@@ -7,3 +7,7 @@ Resources in this repository:
 * **Gizmos** - Some useful gizmos for Unity QA & debugging
 * **Templates** - A template MonoBehaviour class for Unity
 * **Utils** - Some class extensions and other utilities to add functionality to Unity.
+
+## License
+
+All documents and code in this repository are distributed under a [Creative Commons CC0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license.
