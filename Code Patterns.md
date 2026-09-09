@@ -1,6 +1,6 @@
 # Code Patterns
 
-Standard coding patterns to use.
+Standard coding patterns for use in COMP2160 assessment tasks.
 
 - [Code Patterns](#code-patterns)
 - [Initialisation](#initialisation)
@@ -271,9 +271,17 @@ public class PlayerMove : MonoBehaviour
 }
 ```
 
-# Odin Inspector attributes
+# Odin Inspector 
 
-Use [Odin Inspector](https://odininspector.com/attributes) attibutes to give more information about parameter values.
+Macquarie University staff and students have access to a free educational license for Odin Inspector and Odin Validator. To access this 
+
+1. Go to https://odininspector.com/educational/marcquarie-university and follow the registration instructions.  
+2. Download the `Odin Inspector 4.0.2.4.unitypackage` file.
+3. In Unity, select the `Assets` folder in the Project view.
+4. In the menu, select **Assets > Import Package > Custom Package**
+5. Select the `Odin Inspector 4.0.2.4.unitypackage` file.
+
+Use [Odin Inspector attributes](https://odininspector.com/attributes) attributes to give more information about parameter values.
 
 ## Validation
 
