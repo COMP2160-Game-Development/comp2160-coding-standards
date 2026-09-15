@@ -1,12 +1,11 @@
 /**
- *
+ * 
  * Author: Malcolm Ryan
  * Version: 1.0
- * For Unity Version: 6.3
+ * For Unity Version: 6000.0.53f1
  */
 
 using UnityEngine;
-using Sirenix.OdinInspector;
 
     #ROOTNAMESPACEBEGIN#
 public class #SCRIPTNAME# : MonoBehaviour
@@ -14,6 +13,9 @@ public class #SCRIPTNAME# : MonoBehaviour
 
 #region Parameters
 #endregion 
+
+#region Connected Objects
+#endregion
 
 #region Components
 #endregion
@@ -37,7 +39,23 @@ public class #SCRIPTNAME# : MonoBehaviour
     void Update()
     {
     }
-#endregion 
+#endregion
 
+#region FixedUpdate
+    void FixedUpdate()
+    {        
+    }
+#endregion
+
+#region Gizmos
+    void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            // Don't run in the editor
+            return;
+        }
+    }
+#endregion
 }
 #ROOTNAMESPACEEND#

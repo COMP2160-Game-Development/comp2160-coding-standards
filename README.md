@@ -6,7 +6,7 @@ Resources in this repository:
 * **Git Conventions.md** - A guide to conventions for working with Git in this unit.
 * **Diagrams** - Template diagrams in Powerpoint for ERDs and FSMs
 * **Gizmos** - Some useful gizmos for Unity QA & debugging
-* **Templates** - A template MonoBehaviour class for Unity
+* **ScriptTemplates** - A template MonoBehaviour class for Unity
 * **Utils** - Some class extensions and other utilities to add functionality to Unity.
 
 ## License
