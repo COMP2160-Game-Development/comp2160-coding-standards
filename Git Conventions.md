@@ -4,7 +4,12 @@ This document outlines conventions for git usage in COMP2160.
 
 - [Git Conventions](#git-conventions)
 - [Git Ignore](#git-ignore)
-- [Unity](#unity)
+- [Workflow](#workflow)
+- [Commit messages](#commit-messages)
+- [Unity best practices](#unity-best-practices)
+  - [Prefabs](#prefabs)
+  - [Scenes](#scenes)
+- [Asset Management](#asset-management)
 
 # Git Ignore
 
